@@ -132,13 +132,24 @@ struct Scenario {
 
 
 /// CAMP
-
 struct Faction {
     int alive;
     int index;
+    bool player_controlled;
+    Color color;
     Culture *culture;
+    const char *name;
 };
 
+
+/**
+ * Relations from 100 to 0.
+ *
+ * At relation 30 there is a chance for war.
+ * A relation event of war can be canceled with a relation
+ * event of peace. The worse the relation, the smaller the
+ * chance that the faction will accept.
+ */
 struct RelationEvent {
     int index;
     int alive;
@@ -182,13 +193,31 @@ struct Tile {
     bool is_passable;
     Army *army;
     Faction *owner;
-};
 
-ARENA(Faction, 100)
+    /**
+     * Each tile type has 4 different base
+     * textures. this number represents which one
+     * is used for this tile.
+     *
+     * They have no effect, but allow for a little
+     * nicer looking campaign card.
+     *
+     * They also get an overlay for the improvement
+     * per level.
+     *
+     * The gras gets fortified, the industry gets more factories
+     * the minerals more mines, etc.
+     */
+    int number_of_texture_variance;
+
+    // todo: load the level modifications for the tile in mod
+};
 
 ARENA(RelationEvent, 100)
 //ARENA(Army,  1000)
-ARENA(Tile, 100*100)
+#define TILES_ON_X 10
+#define TILES_ON_Y 10
+ARENA(Tile, TILES_ON_X * TILES_ON_Y)
 // --> camp
 
 
@@ -339,6 +368,8 @@ struct UnitTypeWeaponProjectileType {
     Texture2D texture;
 };
 
+#define CULTURE_MAX_NUM 20
+#define FACTIONS_MAX_NUM 100
 
 /**
  * Do we have orcs, landsknechts or ww2 soldiers?
@@ -348,12 +379,17 @@ struct UnitTypeWeaponProjectileType {
  * basically all assets.
  */
 struct GameModification {
-    Culture cultures[60];
+    Culture cultures[CULTURE_MAX_NUM];
+    Faction factions[FACTIONS_MAX_NUM];
     Texture2D flat_tile[4];
-    Texture2D unpassable_mountain_tile[4];
-    Texture2D factory[4]; // each is one level
-    Texture2D minerals[4]; // each is one level
-    Texture2D water;
+    Texture2D mountain_tile[4];
+    Texture2D factory_tile[4];
+    Texture2D minerals_tile[4];
+    Texture2D flat_tile_level_modification[4]; // one per level
+    Texture2D factory_tile_level_modification[4]; // one per level
+    Texture2D minerals_tile_level_modification[4]; // one per level
+    Texture2D water_tile;
+    // todo: load the level modifications for the tile
     // button images
 };
 
