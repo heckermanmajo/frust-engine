@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <math.h>
 
+#define EQUAL_STRING(s1,s2) (strcmp(s1, s2) == 0)
+
 // load all shared external libs
 #include "src/share/raylib.h"
 
@@ -40,6 +42,7 @@
 
 #include "src/camp/compositions/Camp_get_relation_number.c"
 #include "src/camp/compositions/Camp_get_relation_status.c"
+#include "src/camp/compositions/Camp_calculate_income.c"
 
 #include "src/camp/Camp_progress_to_next_round.c"
 #include "src/camp/Camp_draw.c"

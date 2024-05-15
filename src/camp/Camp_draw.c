@@ -19,7 +19,7 @@ void Camp_draw(Camp *camp, float dt) {
 
   for (int i = 0; i <= camp->arenaOfTile.largest_index_of_living_instance; i++) {
 
-    int x_num = floor(i / camp->tiles_on_y);
+    int x_num = (int) floorf((float)i / (float)camp->tiles_on_y);
     int x_pixel = x_num * camp->tile_size;
     int y_num = i - (x_num * camp->tiles_on_x);
     int y_pixel = y_num * camp->tile_size;
@@ -175,7 +175,7 @@ void Camp_draw(Camp *camp, float dt) {
       {
         int i = camp->selected_tile->index;
 
-        int x_num = floor(i / camp->tiles_on_y);
+        int x_num = (int) floorf((float)i / (float)camp->tiles_on_y);
         int x_pixel = x_num * camp->tile_size;
         int y_num = i - (x_num * camp->tiles_on_x);
         int y_pixel = y_num * camp->tile_size;
@@ -306,21 +306,21 @@ void Camp_draw(Camp *camp, float dt) {
             if (not_the_player) {
               // display buttons for diplomacy
               // todo: handle button - clicks
-              GuiButton((Rectangle) {layout_start_x, 170 + top_bar_height, 300, 40}, "Diplomacy-History");
+              GuiButton((Rectangle) {(float)layout_start_x, 170 + (float)top_bar_height, 300, 40}, "Diplomacy-History");
 
-              GuiButton((Rectangle) {layout_start_x, 170 + 60 + top_bar_height, 300, 40}, "Send 100 Command Points");
+              GuiButton((Rectangle) {(float)layout_start_x, 170 + 60 + (float)top_bar_height, 300, 40}, "Send 100 Command Points");
 
-              GuiButton((Rectangle) {layout_start_x, 170 + 120 + top_bar_height, 300, 40}, "Declare War/Request Peace");
+              GuiButton((Rectangle) {(float)layout_start_x, 170 + 120 + (float)top_bar_height, 300, 40}, "Declare War/Request Peace");
 
-              GuiButton((Rectangle) {layout_start_x, 170 + 180 + top_bar_height, 300, 40}, "Request Puppet-State");
+              GuiButton((Rectangle) {(float)layout_start_x, 170 + 180 +(float) top_bar_height, 300, 40}, "Request Puppet-State");
             } else {
-              GuiButton((Rectangle) {layout_start_x, 170 + top_bar_height, 300, 40}, "Create Army/increase army size");
+              GuiButton((Rectangle) {(float)layout_start_x, 170 + (float)top_bar_height, 300, 40}, "Create Army/increase army size");
 
-              GuiButton((Rectangle) {layout_start_x, 170 + 60 + top_bar_height, 300, 40}, "Upgrade army");
+              GuiButton((Rectangle) {(float)layout_start_x, 170 + 60 + (float)top_bar_height, 300, 40}, "Upgrade army");
 
-              GuiButton((Rectangle) {layout_start_x, 170 + 120 + top_bar_height, 300, 40}, "Upgrade Field");
+              GuiButton((Rectangle) {(float)layout_start_x, 170 + 120 + (float)top_bar_height, 300, 40}, "Upgrade Field");
 
-              GuiButton((Rectangle) {layout_start_x, 170 + 180 + top_bar_height, 300, 40}, "Sell army");
+              GuiButton((Rectangle) {(float)layout_start_x, 170 + 180 + (float)top_bar_height, 300, 40}, "Sell army");
             }
 
             //  todo add editor buttons
@@ -358,20 +358,20 @@ void Camp_draw(Camp *camp, float dt) {
     DrawRectangle(0, 0, camp->game->screen_x, top_bar_height, GRAY);
 
     bool next_round_button_pressed = GuiButton(
-      (Rectangle) {10, 10, 100, top_bar_height - 20},
+      (Rectangle) {10, 10, 100, (float) top_bar_height - 20},
       TextFormat(" (%d) Next Round + ", camp->current_round_num)
     );
 
     if (next_round_button_pressed && Camp_draw_cool_down < 0) {
-      Camp_draw_cool_down = 0.2;
+      Camp_draw_cool_down = 0.2f;
       Camp_progress_to_next_round(camp);
 
       SetMousePosition(camp->game->screen_x / 2, camp->game->screen_y / 2);
     }
 
-    GuiButton((Rectangle) {130, 10, 100, top_bar_height - 20}, "Toggle Diplomacy View");
+    GuiButton((Rectangle) {130, 10, 100, (float) top_bar_height - 20}, "Toggle Diplomacy View");
 
-    GuiButton((Rectangle) {camp->game->screen_x - 120, 10, 100, top_bar_height - 20}, "MENU");
+    GuiButton((Rectangle) {(float) camp->game->screen_x - 120, 10, 100, (float) top_bar_height - 20}, "MENU");
 
     DrawText("2134 $ Income +123 $/round", 250, 15, 30, BLACK);
 

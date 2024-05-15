@@ -5,3 +5,6 @@ Camp-todo:
 - calculate diplomacy state functions
     - as helpers, they are needed in the ui
     - they are compositions
+- color in the color or relation
+- move army
+- progress to new round
