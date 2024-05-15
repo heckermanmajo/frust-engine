@@ -2482,7 +2482,7 @@ int GuiTextBox(Rectangle bounds, char *text, int textSize, bool editMode)
     if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_UP) || IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_BACKSPACE) || IsKeyDown(KEY_DELETE)) autoCursorCooldownCounter++;
     else
     {
-        autoCursorCooldownCounter = 0;      // GLOBAL: Cursor cooldown counter
+        autoCursorCooldownCounter = 0;      // GLOBAL: Cursor cool_down counter
         autoCursorDelayCounter = 0;         // GLOBAL: Cursor delay counter
     }
 

@@ -29,7 +29,7 @@ void Menu_draw(Menu *self) {
 
                 // populate the scenario memory with the defaults from the game config
                 // menu contains the prt to the game, which contains the mod config
-                Menu_populate_new_scenario_from_mod(self);
+                Menu_populate_new_scenario_from_mod(self, false);
 
                 self->mode = MenuMode_SCENARIO_CONFIG;
             }
@@ -38,14 +38,23 @@ void Menu_draw(Menu *self) {
                 self->mode = MenuMode_LOAD_SCENARIO_VIEW;
             }
 
-            if (GuiButton((Rectangle) {100, 300, 300, 50}, "Custom Battle")) {
-                self->mode = MenuMode_CUSTOM_BATTLE_VIEW;
+
+            if (GuiButton((Rectangle) {100, 300, 300, 50}, "Start Editor")) {
+
+              // populate the scenario memory with the defaults from the game config
+              // menu contains the prt to the game, which contains the mod config
+              Menu_populate_new_scenario_from_mod(self, true);
+
+              self->mode = MenuMode_SCENARIO_CONFIG;
             }
 
-            if (GuiButton((Rectangle) {100, 400, 300, 50}, "Exit")) {
-                self->game->run_program = false;
+            if (GuiButton((Rectangle) {100, 400, 300, 50}, "Custom Battle")) {
+              self->mode = MenuMode_CUSTOM_BATTLE_VIEW;
             }
 
+            if (GuiButton((Rectangle) {100, 500, 300, 50}, "Exit")) {
+              self->game->run_program = false;
+            }
             break;
 
 

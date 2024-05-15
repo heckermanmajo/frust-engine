@@ -1,0 +1,7 @@
+Camp-todo:
+
+- move army function
+- move army on arrow-keys
+- calculate diplomacy state functions
+    - as helpers, they are needed in the ui
+    - they are compositions

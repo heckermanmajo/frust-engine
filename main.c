@@ -37,8 +37,13 @@
 
 
 // load all camp functions
-// ...
+
+#include "src/camp/compositions/Camp_get_relation_number.c"
+#include "src/camp/compositions/Camp_get_relation_status.c"
+
+#include "src/camp/Camp_progress_to_next_round.c"
 #include "src/camp/Camp_draw.c"
+#include "src/camp/Camp_move_army.c"
 #include "src/camp/Camp_update.c"
 
 // load all battle functions
@@ -49,6 +54,10 @@
 Game *Game_init() {
 
   Game *game = malloc(sizeof(Game));
+
+  // very important
+  game->camp.arenaOfArmy.capacity = 0;
+  game->camp.arenaOfTile.capacity = 0;
 
   game->game_mode = GameMode_MENU;
   game->menu.mode = MenuMode_MOD_SELECTION;
@@ -85,7 +94,7 @@ void Game_update_frame(Game *self, float dt) {
 
 }
 
-void Game_draw(Game *self) {
+void Game_draw(Game *self, float dt) {
 
   switch (self->game_mode) {
 
@@ -94,7 +103,7 @@ void Game_draw(Game *self) {
       break;
 
     case GameMode_CAMP:
-      Camp_draw(&self->camp);
+      Camp_draw(&self->camp, dt);
       break;
 
     case GameMode_BATTLE:
@@ -128,8 +137,10 @@ int main(void) {
 
     sprintf((char *) &fps, "%d fps", GetFPS());
 
+
+    float dt = GetFrameTime();
     // game logic here
-    Game_update_frame(game, GetFrameTime());
+    Game_update_frame(game, dt);
 
 
     BeginDrawing();
@@ -142,14 +153,14 @@ int main(void) {
 
     //UnitContainer_draw_all_units(unit_container, texture);
 
-    Game_draw(game);
+    Game_draw(game, dt);
 
     if (IsKeyDown(KEY_ESCAPE)) {
       break;
     }
 
 
-    DrawText(fps, 10, 10, 20, LIGHTGRAY);
+    DrawText(fps, 10, game->screen_y - 210, 20, LIGHTGRAY);
 
     //DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
     //DrawTexture(texture, SCREEN_WITDH/2 - texture.width/2, SCREEN_HEIGHT/2 - texture.height/2, WHITE);
@@ -161,6 +172,8 @@ int main(void) {
   }
 
   CloseWindow();
+
+  free(game);
 
   return 0;
 }
