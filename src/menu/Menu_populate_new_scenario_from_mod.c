@@ -66,6 +66,9 @@ void Menu_populate_new_scenario_from_mod(
     ArenaOfRelationEvent * arena_of_relation_events =  &(g->camp.arenaOfRelationEvents);
     ArenaOfRelationEvent_set_all_dead(arena_of_relation_events);
 
+    ArenaOfArmyMovementDecision * arena_of_army_movement_decision = &(g->camp.armyMovementDecisions);
+    ArenaOfArmyMovementDecision_set_all_dead(arena_of_army_movement_decision);
+
     // raylib
     SetRandomSeed(0xaabbccff);   // Set a custom random seed if desired, by default: "time(NULL)"
 

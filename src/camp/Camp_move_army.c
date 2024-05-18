@@ -12,6 +12,7 @@
  * This is the central campaign logic.
  *
  *
+ *
  * @param a
  * @param target
  */
@@ -85,9 +86,13 @@ void Camp_move_army(
     if (EQUAL_STRING(state, "war")) {
 
       // todo: attack
+      printf("NOT implemented yet -> start the campaign battle.\n");
+      // todo: if both factions are not the player onces
+      //       auto-calculate the battle
 
     } else {
       // do nothing ...
+      // because we don't want to accidentally attack an ally or neutral
     }
 
   }

@@ -24,6 +24,9 @@ typedef struct Game Game;
 
 /// CAMP
 
+struct ArmyMovementDecision;
+typedef struct ArmyMovementDecision ArmyMovementDecision;
+
 struct Culture;
 typedef struct Culture Culture;
 
@@ -135,7 +138,28 @@ struct Faction {
   Color color;
   Culture *culture;
   const char *name;
+  int command_points;
 };
+
+
+/**
+ * If an ai faction wants to move an army, this can
+ * result into a battle with the player, which changes
+ * the mode from campaign to battle.
+ *
+ * Since factions move a lot per round and multiple
+ * battles can happen, we need to create a list of all
+ * moves and have a "move resolving" phase, that can be
+ * interrupted by a battle and after the battle proceed.
+ */
+struct ArmyMovementDecision {
+  int alive;
+  int index;
+  Faction *faction;
+  Army *army;
+  Tile *tile;
+};
+
 
 
 typedef enum {
@@ -145,7 +169,7 @@ typedef enum {
   RelationEventType_DELERATION_OF_DEFENSIVE_ALLIANCE,
   RelationEventType_DELERATION_OF_ALLIANCE,
   RelationEventType_DELERATION_OF_PUPPET,
-}RelationEventType;
+} RelationEventType;
 
 /**
  * Relations from 100 to 0.
@@ -184,13 +208,13 @@ struct RelationEvent {
    * f.e. PuppetState
    * f.e.
    */
-  const char* short_description;
+  const char *short_description;
 
   /**
    * Long description, that explains the game mechanic, so
    * a player can look up what has caused a relation event.
    */
-  const char* description;
+  const char *description;
 
   /**
    * This will be decreased each round, until
@@ -251,7 +275,7 @@ struct Army {
    * Only relevant for the player.
    */
   bool movement_this_turn;
-  Tile * tile_i_am_on;
+  Tile *tile_i_am_on;
 };
 
 typedef enum {
@@ -301,6 +325,8 @@ ARENA(Tile, TILES_ON_X * TILES_ON_Y)
 ARENA(Army, TILES_ON_X * TILES_ON_Y)
 // --> camp
 
+ARENA(ArmyMovementDecision, TILES_ON_X * TILES_ON_Y)
+
 
 struct Camp {
   Game *game;
@@ -331,6 +357,15 @@ struct Camp {
    */
   bool diplomacy_relation_view;
 
+
+  /**
+   * If this is true, we are in the phase of the next round
+   * progression, where we resolve the movement-decisions,
+   * that can potentially lead to battles with the player
+   * @see ArmyMovementDecision
+   */
+  bool faction_move_resolving_phase;
+
   int current_round_num;
   int top_bar_height;
   int right_bar_width;
@@ -342,6 +377,8 @@ struct Camp {
   ArenaOfArmy arenaOfArmy;
 
   ArenaOfRelationEvent arenaOfRelationEvents;
+  ArenaOfArmyMovementDecision armyMovementDecisions;
+
 };
 
 

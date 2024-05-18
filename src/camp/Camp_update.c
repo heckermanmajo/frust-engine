@@ -3,6 +3,34 @@ float cool_down = 0;
 
 void Camp_update(Camp *camp, float dt) {
 
+
+  /**
+   * Resolve al ai moves if we are in the resolving phase
+   * If we are in the resolving phase, we jump to the
+   * end of the function afterwards, so the input is not handled.
+   */
+  if (camp->faction_move_resolving_phase){
+
+    bool done_with_this_phase = camp->armyMovementDecisions.living_instances == 0;
+    if(done_with_this_phase){
+      camp->faction_move_resolving_phase = false;
+      goto END_OF_FUNCTION_Camp_update;
+    }
+
+    // roll up from the front
+    int smallest_index = camp->armyMovementDecisions.smallest_index_of_dead_instance;
+    ArmyMovementDecision * amd = ArenaOfArmyMovementDecision_get(&(camp->armyMovementDecisions), smallest_index);
+
+    // this can set the mode to battle, so we can only handle one movement per function call
+    Camp_move_army(amd->army, amd->tile, camp);
+
+    // set this movement decision to dead
+    ArenaOfArmyMovementDecision_set_to_dead(&(camp->armyMovementDecisions), smallest_index);
+
+    // no interactions during the resolving of the ai faction movements
+    goto END_OF_FUNCTION_Camp_update;
+  }
+
   cool_down -= dt;
   bool key_cool_down_done = cool_down <= 0;
 
@@ -44,7 +72,7 @@ void Camp_update(Camp *camp, float dt) {
       camp->camera2D.zoom += (wheel * zoomIncrement);
       if (camp->camera2D.zoom < min_zoom) camp->camera2D.zoom = min_zoom;
     }
-  }
+  } // end scroll
 
 
   // select a tile with the mouse
@@ -102,7 +130,11 @@ void Camp_update(Camp *camp, float dt) {
       camp->selected_tile = NULL;
     }
 
-  }
+  } // end select tile with mouse
+
+
+  // label
+  END_OF_FUNCTION_Camp_update:
 
 
 }
