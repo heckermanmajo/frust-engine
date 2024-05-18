@@ -1,9 +1,26 @@
+
+
 void Camp_progress_to_next_round(Camp *camp){
 
   printf("NEXT ROUND\n");
 
   // ai moves -> into queue
   // todo:
+
+  struct TileAiInformation{
+    Tile* tile;
+    bool is_chokepoint;
+    int economic_value;
+    bool contains_enemy_units;
+    int distance_to_enemy_factory;
+    int distance_to_my_factory;
+    int distance_to_enemy_minerals;
+    int distance_to_my_minerals;
+    int biggest_neighbour_enemy_army_command_points;
+  };
+
+
+  struct TileAiInformation tile_ai_info[TILES_ON_X*TILES_ON_Y];
 
   // how to determine the ai moves?
   // chokepoints
