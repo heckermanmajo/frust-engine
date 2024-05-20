@@ -13,7 +13,7 @@ GameModification *MAGES_init() {
 
   // load all the tile images ...
   {
-    char *image_path_buffer = malloc(sizeof(char) * 200);
+    char image_path_buffer[200];
 
     LOAD_TEXTURE(flat_tile[0], "flat_0")
     LOAD_TEXTURE(flat_tile[1], "flat_1")
@@ -39,7 +39,6 @@ GameModification *MAGES_init() {
 
     LOAD_TEXTURE(water_tile, "water")
 
-    free(image_path_buffer);
   }
 
   const int SELEUKIDEN = 0;

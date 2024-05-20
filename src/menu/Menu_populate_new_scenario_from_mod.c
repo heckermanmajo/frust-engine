@@ -45,7 +45,7 @@ void Menu_populate_new_scenario_from_mod(
     g->camp.right_bar_width = 420;
 
     /// this needs to have a null initialized camp at the start
-    /// of the game
+    /// of the game, otherwise it will crash lol
     /// @see Game_init
     if (g->camp.arenaOfTile.capacity==0){
       g->camp.arenaOfTile = *ArenaOfTile_new();
@@ -55,6 +55,9 @@ void Menu_populate_new_scenario_from_mod(
     }
     if(g->camp.arenaOfRelationEvents.capacity == 0 ){
       g->camp.arenaOfRelationEvents = *ArenaOfRelationEvent_new();
+    }
+    if (g->camp.arenaOfArmyMovementDecisions.capacity == 0){
+      g->camp.arenaOfArmyMovementDecisions = *ArenaOfArmyMovementDecision_new();
     }
 
     ArenaOfTile *arena = &(g->camp.arenaOfTile);
@@ -66,7 +69,7 @@ void Menu_populate_new_scenario_from_mod(
     ArenaOfRelationEvent * arena_of_relation_events =  &(g->camp.arenaOfRelationEvents);
     ArenaOfRelationEvent_set_all_dead(arena_of_relation_events);
 
-    ArenaOfArmyMovementDecision * arena_of_army_movement_decision = &(g->camp.armyMovementDecisions);
+    ArenaOfArmyMovementDecision * arena_of_army_movement_decision = &(g->camp.arenaOfArmyMovementDecisions);
     ArenaOfArmyMovementDecision_set_all_dead(arena_of_army_movement_decision);
 
     // raylib
@@ -118,6 +121,19 @@ void Menu_populate_new_scenario_from_mod(
 
     } // outer for loop, x
 
+  }
+
+  // reset the factions target arrays
+  // this needs to happen every new game is created or loaded
+  // since the target arrays are changed during the camp game
+  {
+    for(int i = 0; i < FACTIONS_MAX_NUM; i++){
+      Faction* faction = &(g->mod->factions[i]);
+      for (int j=0;j < FACTION_CAMP_MAP_TARGET_TILES;j++){
+        faction->tiles_to_get[j] = 0;
+        faction->tiles_to_defend[j] = 0;
+      }
+    }
   }
 
 

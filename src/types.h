@@ -33,6 +33,9 @@ typedef struct Culture Culture;
 struct Faction;
 typedef struct Faction Faction;
 
+struct FactionCampaignMapTarget;
+typedef struct FactionCampaignMapTarget FactionCampaignMapTarget;
+
 struct RelationEvent;
 typedef struct RelationEvent RelationEvent;
 
@@ -130,6 +133,8 @@ struct Scenario {
 };
 
 
+#define FACTION_CAMP_MAP_TARGET_TILES 100
+
 /// CAMP
 struct Faction {
   int alive;
@@ -139,7 +144,10 @@ struct Faction {
   Culture *culture;
   const char *name;
   int command_points;
+  int tiles_to_defend[FACTION_CAMP_MAP_TARGET_TILES];
+  int tiles_to_get[FACTION_CAMP_MAP_TARGET_TILES];
 };
+
 
 
 /**
@@ -377,7 +385,7 @@ struct Camp {
   ArenaOfArmy arenaOfArmy;
 
   ArenaOfRelationEvent arenaOfRelationEvents;
-  ArenaOfArmyMovementDecision armyMovementDecisions;
+  ArenaOfArmyMovementDecision arenaOfArmyMovementDecisions;
 
 };
 

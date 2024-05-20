@@ -9,23 +9,25 @@ void Camp_update(Camp *camp, float dt) {
    * If we are in the resolving phase, we jump to the
    * end of the function afterwards, so the input is not handled.
    */
+  // TODO: if an army is destroyed before the move can happen, we are fucked
+  //        THIS NEEDS TO BE FIXED ...
   if (camp->faction_move_resolving_phase){
 
-    bool done_with_this_phase = camp->armyMovementDecisions.living_instances == 0;
+    bool done_with_this_phase = camp->arenaOfArmyMovementDecisions.living_instances == 0;
     if(done_with_this_phase){
       camp->faction_move_resolving_phase = false;
       goto END_OF_FUNCTION_Camp_update;
     }
 
     // roll up from the front
-    int smallest_index = camp->armyMovementDecisions.smallest_index_of_dead_instance;
-    ArmyMovementDecision * amd = ArenaOfArmyMovementDecision_get(&(camp->armyMovementDecisions), smallest_index);
+    int smallest_index = camp->arenaOfArmyMovementDecisions.smallest_index_of_dead_instance;
+    ArmyMovementDecision * amd = ArenaOfArmyMovementDecision_get(&(camp->arenaOfArmyMovementDecisions), smallest_index);
 
     // this can set the mode to battle, so we can only handle one movement per function call
     Camp_move_army(amd->army, amd->tile, camp);
 
     // set this movement decision to dead
-    ArenaOfArmyMovementDecision_set_to_dead(&(camp->armyMovementDecisions), smallest_index);
+    ArenaOfArmyMovementDecision_set_to_dead(&(camp->arenaOfArmyMovementDecisions), smallest_index);
 
     // no interactions during the resolving of the ai faction movements
     goto END_OF_FUNCTION_Camp_update;
