@@ -3,25 +3,26 @@ float cool_down = 0;
 
 void Camp_update(Camp *camp, float dt) {
 
-
   /**
    * Resolve al ai moves if we are in the resolving phase
    * If we are in the resolving phase, we jump to the
-   * end of the function afterwards, so the input is not handled.
+   * end of the function afterwards, so the user-input is not handled.
    */
   // TODO: if an army is destroyed before the move can happen, we are fucked
   //        THIS NEEDS TO BE FIXED ...
-  if (camp->faction_move_resolving_phase){
+  //       so we need to check if all is valid, before we do the actual move ...
+  // todo: we can not do anything in move army if we cannot do the move ...
+  if (camp->faction_move_resolving_phase) {
 
     bool done_with_this_phase = camp->arenaOfArmyMovementDecisions.living_instances == 0;
-    if(done_with_this_phase){
+    if (done_with_this_phase) {
       camp->faction_move_resolving_phase = false;
       goto END_OF_FUNCTION_Camp_update;
     }
 
     // roll up from the front
     int smallest_index = camp->arenaOfArmyMovementDecisions.smallest_index_of_dead_instance;
-    ArmyMovementDecision * amd = ArenaOfArmyMovementDecision_get(&(camp->arenaOfArmyMovementDecisions), smallest_index);
+    ArmyMovementDecision *amd = ArenaOfArmyMovementDecision_get(&(camp->arenaOfArmyMovementDecisions), smallest_index);
 
     // this can set the mode to battle, so we can only handle one movement per function call
     Camp_move_army(amd->army, amd->tile, camp);
@@ -36,8 +37,8 @@ void Camp_update(Camp *camp, float dt) {
   cool_down -= dt;
   bool key_cool_down_done = cool_down <= 0;
 
-  if(camp->editor_mode_allowed && key_cool_down_done){
-    if(IsKeyDown(KEY_F11)){
+  if (camp->editor_mode_allowed && key_cool_down_done) {
+    if (IsKeyDown(KEY_F11)) {
       cool_down = 0.25;
       camp->editor_mode_on = !camp->editor_mode_on;
     }
@@ -135,7 +136,82 @@ void Camp_update(Camp *camp, float dt) {
   } // end select tile with mouse
 
 
-  // label
+
+  // move player army input key handle
+  {
+
+    // if a tile is selected, and it has a army, we can move this army
+    // but only if the army is not moved yet
+
+    if (camp->selected_tile != NULL) {
+
+      Faction *player_faction = &(camp->game->mod->factions[0]);
+      if (camp->selected_tile->owner == player_faction) {
+
+        int has_army = camp->selected_tile->army != NULL;
+        if (has_army) {
+
+          int can_move_this_turn = !camp->selected_tile->army->movement_this_turn;
+          if (can_move_this_turn) {
+
+            int x_where_tile_would_be = -1;
+            int y_where_tile_would_be = -1;
+
+            if (IsKeyDown(KEY_UP)) {
+
+              x_where_tile_would_be = camp->selected_tile->x * camp->tile_size;
+              y_where_tile_would_be = camp->selected_tile->y * camp->tile_size - camp->tile_size;
+
+            } else if (IsKeyDown(KEY_DOWN)) {
+
+              x_where_tile_would_be = camp->selected_tile->x * camp->tile_size;
+              y_where_tile_would_be = camp->selected_tile->y * camp->tile_size + camp->tile_size;
+
+            } else if (IsKeyDown(KEY_LEFT)) {
+
+              x_where_tile_would_be = camp->selected_tile->x * camp->tile_size - camp->tile_size;
+              y_where_tile_would_be = camp->selected_tile->y * camp->tile_size;
+
+            } else if (IsKeyDown(KEY_RIGHT)) {
+
+              x_where_tile_would_be = camp->selected_tile->x * camp->tile_size + camp->tile_size;
+              y_where_tile_would_be = camp->selected_tile->y * camp->tile_size;
+
+            }
+
+            if(x_where_tile_would_be != -1){
+
+              int index = Camp_get_tile_index_from_xy_pos(
+                camp,
+                x_where_tile_would_be,
+                y_where_tile_would_be
+              );
+
+              int is_valid = index != -1;
+              if (is_valid) {
+                Tile *target_tile = ArenaOfTile_get(&(camp->arenaOfTile), index);
+                Army* army = camp->selected_tile->army;
+                bool success = Camp_move_army(camp->selected_tile->army,target_tile, camp);
+                // army can move away from the selected tile ...
+                if (success){
+                  army->movement_this_turn = true;
+                }
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  } // end move player army input key handle
+
+
+  // label to jump here, if the AI player moves are handled
   END_OF_FUNCTION_Camp_update:
 
 

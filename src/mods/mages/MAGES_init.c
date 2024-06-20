@@ -3,7 +3,7 @@
 //       executable into the main game folder ...
 
 #define LOAD_TEXTURE(mod_field, filename)\
-snprintf(image_path_buffer, 200, "../src/mods/mages/res/%s.png", filename ); \
+snprintf(image_path_buffer, 200, "./src/mods/mages/res/%s.png", filename ); \
 mod->mod_field = LoadTexture(image_path_buffer);
 
 

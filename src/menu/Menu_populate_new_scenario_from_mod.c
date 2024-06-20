@@ -180,6 +180,7 @@ void Menu_populate_new_scenario_from_mod(
           a->command_points = GetRandomValue(100, 300);
           a->tech_level = 1;//GetRandomValue(1, 5);
           a->tile_i_am_on = t;
+          a->movement_this_turn = false;
 
           t->army = a;
 

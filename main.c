@@ -44,6 +44,7 @@
 #include "src/camp/compositions/Camp_get_relation_status.c"
 #include "src/camp/compositions/Camp_calculate_tile_income.c"
 #include "src/camp/compositions/Camp_calculate_income.c"
+#include "src/camp/compositions/Camp_get_tile_index_from_xy_pos.c"
 
 #include "src/camp/Camp_progress_to_next_round.c"
 #include "src/camp/Camp_draw.c"

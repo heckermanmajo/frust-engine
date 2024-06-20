@@ -1,8 +1,5 @@
-
 # Current Todos
 -> different tile-types
-
-
 
 # -O3 !!! for perf test
 

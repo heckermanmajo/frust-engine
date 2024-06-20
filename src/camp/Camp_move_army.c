@@ -9,18 +9,26 @@
 
 
 /**
- * This is the central campaign logic.
+ * This is the central campaign logic: Move a army to another field.
  *
+ * @param a the army to move.
+ * @param target the target to move to.
+ * @param camp The campaign context object.
  *
- *
- * @param a
- * @param target
+ * @return true if the movement was success-full and consumed
  */
-void Camp_move_army(
+bool Camp_move_army(
   Army *a,
   Tile *target,
   Camp *camp
 ) {
+
+  // todo: check if it can be done at all
+  //       if the target is blocked, just do nothing....
+
+  if(!target->is_passable){
+    return false;
+  }
 
   // if there is no owner, we just move there
   if (target->owner == NULL) {
@@ -30,6 +38,7 @@ void Camp_move_army(
     target->army = a;
     // now this tile is owned by the owner to the tile
     target->owner = a->owner;
+    a->tile_i_am_on = target;
 
   }
 
@@ -43,6 +52,7 @@ void Camp_move_army(
 
       a->tile_i_am_on->army = NULL;
       target->army = a;
+      a->tile_i_am_on = target;
 
     } else {
 
@@ -58,18 +68,21 @@ void Camp_move_army(
         higher_tech_army = a;
       }
 
-      // increase the command points
+      // increase the command points of the higher tech army
       higher_tech_army->command_points += lower_tech_army->command_points;
 
       // set army to dead
       ArenaOfArmy_set_to_dead(&(camp->arenaOfArmy), lower_tech_army->index);
 
-      // move there
+      // move there (remove from the tiles)
+      lower_tech_army->tile_i_am_on->army = NULL;
+      higher_tech_army->tile_i_am_on->army = NULL;
       lower_tech_army->tile_i_am_on = NULL;
       higher_tech_army->tile_i_am_on = NULL;
 
       // set the higher army to the target tile
       target->army = higher_tech_army;
+      higher_tech_army->tile_i_am_on = target;
 
     }
 
@@ -93,8 +106,12 @@ void Camp_move_army(
     } else {
       // do nothing ...
       // because we don't want to accidentally attack an ally or neutral
+      printf("ignore move, because the other faction is not at war...");
+      return false;
     }
 
   }
+
+  return true;
 
 }

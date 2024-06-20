@@ -121,19 +121,24 @@ void Camp_draw(Camp *camp, float dt) {
 
           // todo: apply white surrounding if already moved this turn only on player
 
+          Color color_to_use = t->owner->color;
+          if (t->army->movement_this_turn == true){
+            color_to_use = WHITE;
+          }
+
           DrawRectangleLines(
             x_pixel + half_a_tile - (place_for_line / 2) * j,
             y_pixel + half_a_tile - (place_for_line / 2) * j,
             draw_width + place_for_line * j,
             draw_height + place_for_line * j,
-            t->owner->color
+            color_to_use
           );
           DrawRectangleLines(
             x_pixel + half_a_tile - (place_for_line / 2) * j - 1,
             y_pixel + half_a_tile - (place_for_line / 2) * j - 1,
             draw_width + place_for_line * j + 2,
             draw_height + place_for_line * j + 2,
-            t->owner->color
+            color_to_use
           );
         }
 
